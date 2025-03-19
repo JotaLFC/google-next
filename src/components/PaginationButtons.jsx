@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
+import { Suspense } from 'react';
 
-export default function PaginationButtons() {
+function PaginationButtonsContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const searchTerm = searchParams.get('searchTerm');
@@ -33,5 +34,13 @@ export default function PaginationButtons() {
         </Link>
       )}
     </div>
+  );
+}
+
+export default function PaginationButtons() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PaginationButtonsContent />
+    </Suspense>
   );
 }
