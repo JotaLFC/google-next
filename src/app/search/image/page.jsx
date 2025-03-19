@@ -2,7 +2,15 @@ import { Suspense } from 'react';
 import ImageSearchResults from '@/components/ImageSearchResults';
 import Link from 'next/link';
 
-export default async function ImageSearchPage({ searchParams }) {
+function ImageSearchPageWrapper({ searchParams }) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ImageSearchPage searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+export async function ImageSearchPage({ searchParams }) {
   const startIndex = searchParams.start || '1';
   await new Promise((resolve) => setTimeout(resolve, 1000));
   const response = await fetch(
@@ -29,8 +37,8 @@ export default async function ImageSearchPage({ searchParams }) {
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <div>{results && <ImageSearchResults results={data} />}</div>
-    </Suspense>
+    <div>{results && <ImageSearchResults results={data} />}</div>
   );
 }
+
+export default ImageSearchPageWrapper;

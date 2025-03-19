@@ -2,7 +2,15 @@ import { Suspense } from 'react';
 import WebSearchResults from '@/components/WebSearchResults';
 import Link from 'next/link';
 
-export default async function WebSearchPage({ searchParams }) {
+function WebSearchPageWrapper({ searchParams }) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <WebSearchPage searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+export async function WebSearchPage({ searchParams }) {
   const startIndex = searchParams.start || '1';
   await new Promise((resolve) => setTimeout(resolve, 1000));
   const response = await fetch(
@@ -29,8 +37,8 @@ export default async function WebSearchPage({ searchParams }) {
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <div>{results && <WebSearchResults results={data} />}</div>
-    </Suspense>
-  )
+    <div>{results && <WebSearchResults results={data} />}</div>
+  );
 }
+
+export default WebSearchPageWrapper;
